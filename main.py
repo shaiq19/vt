@@ -134,11 +134,29 @@ def upload_image():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        global conn, cursor
+        conn = sqlite3.connect("db_FINAL.db")
+        cursor = conn.cursor()
+        cursor.execute(
+            "CREATE TABLE IF NOT EXISTS `databs` (mem_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, model TEXT,low1 INT,low2 INT,low3 INT,High1 INT,High2 INT,High3 INT)")
+        # sql_update_query = """insert into databs (model,low1,High1) values('arsalan','1','1')"""
+
+        # cursor.execute(sql_update_query)
+        print("added")
+        sql_update_query = """Update databs set model = ?,low1=?,low2=?,low3=?,High1=?,High2=?,High3=? where mem_id = ?"""
+        data = (filename, 42, 108, 90, 255, 255, 255, 1)
+
+        cursor.execute(sql_update_query, data)
+
+        conn.commit()
+
+    
+
         # print('upload_image filename: ' + filename)
         flash('Image successfully uploaded and displayed below')
         frame = cv2.imread('static/uploads/'+filename+'')
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
+        
         # define range of green color in HSV
         # lower_green = np.array([25, 52, 72])
         # upper_green = np.array([102, 255, 255])
@@ -194,7 +212,7 @@ def upload_image():
 
         outpath = "Output.jpg"
         # save the image
-        cv2.imwrite('static/uploads/'+outpath, final_mask_black_3CH)
+        cv2.imwrite('static/'+outpath, final_mask_black_3CH)
         filename=secure_filename(outpath)
        # cv2.imshow('Final Output',final_mask_black_3CH)
 
@@ -289,7 +307,7 @@ def pic1():
 
     outpath = "Output.jpg"
     # save the image
-    cv2.imwrite('static/uploads/' + outpath, final_mask_black_3CH)
+    cv2.imwrite('static/' + outpath, final_mask_black_3CH)
     filename = secure_filename(outpath)
     # cv2.imshow('Final Output',final_mask_black_3CH)
 
@@ -365,7 +383,7 @@ def pic2():
 
     outpath = "Output.jpg"
     # save the image
-    cv2.imwrite('static/uploads/' + outpath, final_mask_black_3CH)
+    cv2.imwrite('static/' + outpath, final_mask_black_3CH)
     filename = secure_filename(outpath)
     # cv2.imshow('Final Output',final_mask_black_3CH)
 
@@ -441,7 +459,7 @@ def pic3():
 
     outpath = "Output.jpg"
     # save the image
-    cv2.imwrite('static/uploads/' + outpath, final_mask_black_3CH)
+    cv2.imwrite('static/' + outpath, final_mask_black_3CH)
     filename = secure_filename(outpath)
     # cv2.imshow('Final Output',final_mask_black_3CH)
 
@@ -517,7 +535,7 @@ def pic4():
 
     outpath = "Output.jpg"
     # save the image
-    cv2.imwrite('static/uploads/' + outpath, final_mask_black_3CH)
+    cv2.imwrite('static/' + outpath, final_mask_black_3CH)
     filename = secure_filename(outpath)
     # cv2.imshow('Final Output',final_mask_black_3CH)
 
@@ -592,7 +610,7 @@ def pic5():
 
     outpath = "Output.jpg"
     # save the image
-    cv2.imwrite('static/uploads/' + outpath, final_mask_black_3CH)
+    cv2.imwrite('static/' + outpath, final_mask_black_3CH)
     filename = secure_filename(outpath)
     # cv2.imshow('Final Output',final_mask_black_3CH)
 
@@ -668,7 +686,7 @@ def pic7():
 
     outpath = "Output.jpg"
     # save the image
-    cv2.imwrite('static/uploads/' + outpath, final_mask_black_3CH)
+    cv2.imwrite('static/' + outpath, final_mask_black_3CH)
     filename = secure_filename(outpath)
     # cv2.imshow('Final Output',final_mask_black_3CH)
 
@@ -744,7 +762,7 @@ def pic6():
 
     outpath = "Output.jpg"
     # save the image
-    cv2.imwrite('static/uploads/' + outpath, final_mask_black_3CH)
+    cv2.imwrite('static/' + outpath, final_mask_black_3CH)
     filename = secure_filename(outpath)
     # cv2.imshow('Final Output',final_mask_black_3CH)
 
@@ -763,4 +781,4 @@ def display_image(filename):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
